@@ -1,50 +1,32 @@
 import streamlit as st
-from document_loader import load_pdf, load_txt
-from text_splitter import split_text
-from embedding_handler import embed_and_store
-from qa_agent import query_document
-from summarizer import summarize_document
+from embedding_handler import embed_and_store, get_document_chunks
+from qa_agent import query_document, index
 
-st.set_page_config(page_title="🌟 DocuSense AI", layout="wide")
+st.set_page_config(page_title="DocuSense-AI", layout="wide")
+st.title("📄 DocuSense-AI: Document Q&A")
 
-st.title("🌟 DocuSense AI - Document Summarizer & Q&A Agent")
+st.header("1️⃣ Upload Documents")
+uploaded_files = st.file_uploader("Upload text files", type=["txt"], accept_multiple_files=True)
 
-uploaded_file = st.file_uploader("📄 Upload your PDF or TXT document", type=['pdf', 'txt'])
+if uploaded_files:
+    all_chunks = []
+    for uploaded_file in uploaded_files:
+        text = uploaded_file.read().decode("utf-8")
+        chunks = [p for p in text.split("\n") if p.strip()]
+        all_chunks.extend(chunks)
+    if all_chunks:
+        embed_and_store(all_chunks)
+        st.success(f"Processed and stored {len(all_chunks)} chunks from uploaded files.")
 
-if uploaded_file is not None:
-    if uploaded_file.type == "application/pdf":
-        document_text = load_pdf(uploaded_file)
-    elif uploaded_file.type == "text/plain":
-        document_text = load_txt(uploaded_file)
-    else:
-        st.error("❌ Unsupported file type.")
-        st.stop()
+st.header("2️⃣ Ask Questions")
+user_question = st.text_input("Enter your question here:")
 
-    st.success("✅ Document loaded successfully!")
-    st.write("---")
+if st.button("Get Answer") and user_question.strip():
+    with st.spinner("Searching for answer..."):
+        answer = query_document(user_question)
+    st.markdown(f"**Answer:** {answer}")
 
-    # Step 1: Summarize document
-    if st.button("📝 Summarize Document"):
-        with st.spinner("Generating summary..."):
-            summary = summarize_document(document_text)
-            st.subheader("📑 Document Summary:")
-            st.write(summary)
-
-    st.write("---")
-
-    # Step 2: Process embeddings
-    if st.button("🔧 Process Document for Q&A"):
-        with st.spinner("Processing and storing embeddings..."):
-            chunks = split_text(document_text)
-            embed_and_store(chunks)
-            st.success(f"✅ Processed {len(chunks)} text chunks into FAISS embeddings.")
-
-    st.write("---")
-
-    # Step 3: Ask Questions
-    user_question = st.text_input("❓ Ask a question related to the document:")
-    if st.button("💬 Get Answer"):
-        with st.spinner("Searching for the best answer..."):
-            answer = query_document(user_question)
-            st.subheader("🤖 Answer:")
-            st.write(answer)
+st.sidebar.header("📊 Info")
+chunks = get_document_chunks()
+st.sidebar.write(f"Total stored chunks: {len(chunks)}")
+st.sidebar.write(f"FAISS index total vectors: {index.ntotal}")
