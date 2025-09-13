@@ -1,7 +1,3 @@
-Here’s a detailed **README.md** for your **DocuSense AI** project:
-
----
-
 # 🌟 DocuSense AI
 
 **DocuSense AI** is a fully open-source document summarization and Q\&A agent.
@@ -104,6 +100,4 @@ streamlit run app.py
 * FAISS index and document chunks are saved locally for faster subsequent queries.
 * Fully offline once models are downloaded.
 
----
 
-Do you want me to also create a **short one-paragraph version** suitable for GitHub repo description?
