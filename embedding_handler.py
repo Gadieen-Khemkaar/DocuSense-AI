@@ -3,6 +3,9 @@ import faiss
 import numpy as np
 import pickle
 from config import EMBEDDING_MODEL_NAME, FAISS_INDEX_PATH, CHUNKS_PKL_PATH
+import os
+
+FAISS_INDEX_PATH = "faiss_index.index"  # path where your FAISS index will be saved
 
 # Load model
 embedding_model = SentenceTransformer(EMBEDDING_MODEL_NAME)
