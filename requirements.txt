@@ -4,3 +4,4 @@ transformers
 PyPDF2
 streamlit
 python-docx
+langchain>=0.1.0
