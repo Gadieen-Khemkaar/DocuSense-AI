@@ -2,6 +2,13 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 import pickle
+from config import EMBEDDING_MODEL_NAME, FAISS_INDEX_PATH, CHUNKS_PKL_PATH
+
+# Load model
+embedding_model = SentenceTransformer(EMBEDDING_MODEL_NAME)
+
+# Save index
+faiss.write_index(index, FAISS_INDEX_PATH)
 
 # Load embedding model
 embedding_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
