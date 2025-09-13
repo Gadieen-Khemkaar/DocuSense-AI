@@ -3,3 +3,4 @@ faiss-cpu
 transformers
 PyPDF2
 streamlit
+python-docx
