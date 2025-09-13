@@ -1,5 +1,5 @@
-openai
-pinecone-client
+sentence-transformers
+faiss-cpu
+transformers
 PyPDF2
-langchain
 streamlit
